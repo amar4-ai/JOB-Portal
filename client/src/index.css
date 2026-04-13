@@ -7,3 +7,61 @@
 *{
       font-family: "Outfit", sans-serif;
 }
+
+.job-description-content h2 {
+          font-size: 1.75rem;
+          font-weight: 700;
+          color: #1a1a1a;
+          margin-top: 2rem;
+          margin-bottom: 1.25rem;
+        }
+
+        .job-description-content h3 {
+          font-size: 1.5rem;
+          font-weight: 600;
+          color: #1a1a1a;
+          margin-top: 1.75rem;
+          margin-bottom: 1rem;
+        }
+
+        .job-description-content p {
+          color: #6b7280;
+          line-height: 1.75;
+          margin-bottom: 1rem;
+        }
+
+        .job-description-content ol,
+        .job-description-content ul {
+          margin-left: 1.5rem;
+          margin-bottom: 1.5rem;
+          color: #6b7280;
+        }
+
+        .job-description-content li {
+          margin-bottom: 0.75rem;
+          line-height: 1.75;
+          padding-left: 0.5rem;
+        }
+
+        .job-description-content ol {
+          list-style-type: decimal;
+        }
+
+        .job-description-content ul {
+          list-style-type: disc;
+        }
+
+        .job-description-content strong {
+          font-weight: 600;
+          color: #1a1a1a;
+        }
+
+@layer base {
+      html {
+            scroll-behavior: smooth;
+      }
+}
+
+::-webkit-scrollbar {
+      display: none;
+}
