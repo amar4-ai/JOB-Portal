@@ -5,9 +5,7 @@ export const clerkWebhooks = async (req, res) => {
     try {
         const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
 
-        // ✅ Use RAW body directly
-        const payload = req.body; // Buffer
-
+        const payload = req.body;
         const headers = {
             "svix-id": req.headers["svix-id"],
             "svix-timestamp": req.headers["svix-timestamp"],
@@ -18,34 +16,43 @@ export const clerkWebhooks = async (req, res) => {
 
         const { data, type } = event;
 
+        console.log("Webhook event:", type);
+
         switch (type) {
-            case 'user.created':
-                await User.create({
-                    _id: data.id,
-                    email: data.email_addresses[0].email_address,
-                    name: data.first_name + " " + data.last_name,
-                    image: data.image_url,
-                    resume: ''
-                });
-                break;
+            case 'user.created': {
+                const exists = await User.findById(data.id);
 
-            case 'user.updated':
+                if (!exists) {
+                    await User.create({
+                        _id: data.id,
+                        email: data.email_addresses?.[0]?.email_address || "",
+                        name: `${data.first_name || ""} ${data.last_name || ""}`,
+                        image: data.image_url || "",
+                        resume: ''
+                    });
+                }
+                break;
+            }
+
+            case 'user.updated': {
                 await User.findByIdAndUpdate(data.id, {
-                    email: data.email_addresses[0].email_address,
-                    name: data.first_name + " " + data.last_name,
-                    image: data.image_url,
+                    email: data.email_addresses?.[0]?.email_address || "",
+                    name: `${data.first_name || ""} ${data.last_name || ""}`,
+                    image: data.image_url || "",
                 });
                 break;
+            }
 
-            case 'user.deleted':
+            case 'user.deleted': {
                 await User.findByIdAndDelete(data.id);
                 break;
+            }
         }
 
-        res.status(200).json({ success: true });
+        return res.status(200).json({ success: true });
 
     } catch (error) {
-        console.error(error);
-        res.status(400).json({ success: false, message: "Webhook Error" });
+        console.error("Webhook Error:", error.message);
+        return res.status(400).json({ success: false });
     }
 };
