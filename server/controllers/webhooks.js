@@ -17,6 +17,9 @@ export const clerkWebhooks = async (req, res) => {
         //Getting data from request body
         const { data, type } = req.body;
         // Switch Cases for different Events
+        console.log("🔥 Webhook triggered");
+        console.log("👉 Event:", type);
+        console.log("👉 User ID:", data.id);
         switch (type) {
             case 'user.created': {
                 const userData = {
@@ -26,8 +29,11 @@ export const clerkWebhooks = async (req, res) => {
                     image: data.image_url,
                     resume: ''
                 }
+                console.log("👉 Data to insert:", newUser);
                 await User.create(userData)
+
                 res.json({})
+                console.log("✅ User inserted in DB");
                 break;
             }
             case 'user.updated': {
@@ -55,7 +61,7 @@ export const clerkWebhooks = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message)
-        res.json({success: false, message: "Webhook Errors"});
+        res.json({ success: false, message: "Webhook Errors" });
 
     }
 }
