@@ -6,33 +6,36 @@ import connectDB from './config/db.js'
 import * as Sentry from '@sentry/node'
 import { clerkWebhooks } from './controllers/webhooks.js'
 
-
-//Initialize Express
 const app = express()
 
-//database
 await connectDB()
 
-//Middlewares
 app.use(cors())
 
-app.post('/webhooks', express.raw({ type: 'application/json' }), clerkWebhooks)
+// CRITICAL: Webhook route MUST come BEFORE express.json()
+app.post(
+  '/webhooks',
+  express.raw({ type: 'application/json' }),
+  clerkWebhooks
+)
 
-
+// JSON parsing for other routes
 app.use(express.json())
 
-
-//Routes
-app.get('/',(req,res)=> res.send("API Working"))
+// Other routes
+app.get('/', (req, res) => res.send("API Working"))
 
 app.get("/debug-sentry", function mainHandler(req, res) {
   throw new Error("My first Sentry error!");
 });
 
-Sentry.setupExpressErrorHandler(app);
+Sentry.setupExpressErrorHandler(app)
 
-//PORT
 const PORT = process.env.PORT || 5000
 
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`)
+})
 
-app.listen(PORT,()=> {console.log(`Server is running on port ${PORT}`)});
+// Export for Vercel
+export default app
