@@ -25,10 +25,6 @@ export const clerkWebhooks = async (req, res) => {
             ? JSON.parse(payloadString)
             : payload;
 
-        console.log("🔥 Webhook triggered");
-        console.log("👉 Event:", type);
-        console.log("👉 User ID:", data.id);
-
         switch (type) {
             case 'user.created': {
                 const userData = {
@@ -41,7 +37,7 @@ export const clerkWebhooks = async (req, res) => {
                 
                 console.log("👉 Data to insert:", userData);
                 await User.create(userData);
-                console.log("✅ User created in DB");
+                console.log("User created in DB");
                 break;
             }
 
@@ -53,25 +49,25 @@ export const clerkWebhooks = async (req, res) => {
                 };
                 
                 await User.findByIdAndUpdate(data.id, userData);
-                console.log("✅ User updated in DB");
+                console.log("User updated in DB");
                 break;
             }
 
             case 'user.deleted': {
                 await User.findByIdAndDelete(data.id);
-                console.log("✅ User deleted from DB");
+                console.log("User deleted from DB");
                 break;
             }
 
             default:
-                console.log("⚠️ Unhandled event type:", type);
+               
         }
 
         return res.status(200).json({ success: true });
 
     } catch (error) {
-        console.error("❌ Webhook Error:", error.message);
-        console.error("❌ Full Error:", error);
+        console.error("Webhook Error:", error.message);
+        console.error("Full Error:", error);
         
         // Return 400 so Clerk knows it failed and will retry
         return res.status(400).json({
