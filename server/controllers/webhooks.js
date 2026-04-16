@@ -10,8 +10,8 @@ export const clerkWebhooks = async (req, res) => {
         const payloadString = Buffer.isBuffer(payload)
             ? payload.toString('utf8')
             : typeof payload === 'string'
-            ? payload
-            : JSON.stringify(payload);
+                ? payload
+                : JSON.stringify(payload);
 
         // Verify webhook signature
         await whook.verify(payloadString, {
@@ -29,12 +29,13 @@ export const clerkWebhooks = async (req, res) => {
             case 'user.created': {
                 const userData = {
                     _id: data.id,
+                
                     email: data.email_addresses[0].email_address,
                     name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'Anonymous',
                     image: data.image_url,
                     resume: ''
                 };
-                
+
                 console.log("👉 Data to insert:", userData);
                 await User.create(userData);
                 console.log("User created in DB");
@@ -47,7 +48,7 @@ export const clerkWebhooks = async (req, res) => {
                     name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'Anonymous',
                     image: data.image_url,
                 };
-                
+
                 await User.findByIdAndUpdate(data.id, userData);
                 console.log("User updated in DB");
                 break;
@@ -60,7 +61,7 @@ export const clerkWebhooks = async (req, res) => {
             }
 
             default:
-               
+
         }
 
         return res.status(200).json({ success: true });
@@ -68,7 +69,7 @@ export const clerkWebhooks = async (req, res) => {
     } catch (error) {
         console.error("Webhook Error:", error.message);
         console.error("Full Error:", error);
-        
+
         // Return 400 so Clerk knows it failed and will retry
         return res.status(400).json({
             success: false,
