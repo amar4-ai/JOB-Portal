@@ -35,7 +35,7 @@ app.use(clerkMiddleware())
 // Routes AFTER JSON parser
 app.use('/api/company', companyRoute)
 app.use('/api/jobs', jobRoute)
-app.use('/api/user', userRoute)
+app.use('/api/users', userRoute)
 
 // Test routes
 app.get('/', (req, res) => res.send("API Working"))

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
 import Loading from '../components/Loading'
@@ -8,21 +8,44 @@ import kconvert from 'k-convert'
 import moment from 'moment'
 import JobCard from '../components/JobCard'
 import Footer from '../components/Footer'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const ApplyJob = () => {
   const {id} = useParams()
+  const navigate = useNavigate()
   const [jobData, setJobData] = useState(null)
-  const {jobs} = useContext(AppContext)
+  const {jobs, backendUrl, userData, userApplications} = useContext(AppContext)
   const applyRef = useRef(null)
   const topRef = useRef(null)
   
 
   const fetchJob = async()=>{
-   const data = jobs.filter(job => job._id === id)
-   if(data.length !== 0){
-    setJobData(data[0])
-    console.log(data[0])
-   }
+  try {
+    const {data} = await axios.get(backendUrl+`/api/jobs/${id}`)
+    if(data.success){
+      setJobData(data.job)
+    } else {
+      toast.error(data.message)
+    }
+  } catch (error) {
+    toast.error(error.message)
+  }
+   
+  }
+
+  const applyHandler = async()=>{
+    try {
+      if(!userData){
+        return toast.error('Login to apply for jobs')
+      }
+      if(!userData.resume){
+        navigate('/applications')
+        return toast.error('Upload resume to apply')
+      }
+    } catch (error) {
+       toast.error(error.message)
+    }
   }
 
   const scrollToApply = () => {
@@ -40,9 +63,9 @@ const ApplyJob = () => {
   }
 
   useEffect(()=>{
-    if(jobs.length > 0){
+    
       fetchJob()
-    }
+    
   },[id,jobs])
 
   return jobData ? (
@@ -93,6 +116,7 @@ const ApplyJob = () => {
             {/* Right Section - Apply Button */}
             <div className='w-full lg:w-1/3 mt-8 lg:mt-0 lg:ml-8 space-y-5'>
               <button 
+              onClick={applyHandler}
                 
                 className='bg-blue-600 hover:bg-blue-700 transition-colors p-2.5 px-10 text-white rounded font-medium w-full sm:w-auto'
               >
@@ -131,6 +155,7 @@ const ApplyJob = () => {
             <div ref={applyRef} className='scroll-mt-24 mt-8'>
               <button 
                 onClick={scrollToTop}
+                onClick={applyHandler}
                 className='bg-blue-600 hover:bg-blue-700 transition-colors py-3 px-12 text-white rounded-lg font-medium text-lg'
               >
                 Apply Now
