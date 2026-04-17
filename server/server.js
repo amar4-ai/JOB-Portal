@@ -19,21 +19,21 @@ await connectCloudinary()
 app.use(cors())
 
 
-// Webhook FIRST (raw body)
+// Webhook  (raw body)
 app.post(
   '/webhooks',
   express.raw({ type: 'application/json' }),
   clerkWebhooks
 )
 
-// JSON parser SECOND
+// JSON parser 
 app.use(express.json())
 
 
 //Clerk middleraware
 app.use(clerkMiddleware())
 
-// Routes AFTER JSON parser
+// Routes 
 app.use('/api/company', companyRoute)
 app.use('/api/jobs', jobRoute)
 app.use('/api/users', userRoute)

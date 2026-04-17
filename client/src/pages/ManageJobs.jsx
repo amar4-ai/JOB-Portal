@@ -1,7 +1,7 @@
 import React from 'react'
 import { manageJobsData } from '../assets/assets'
 import moment from 'moment'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
@@ -14,18 +14,18 @@ const ManageJobs = () => {
   const navigate = useNavigate()
 
   const [jobs, setJobs] = useState(false)
-  const {backendUrl, companyToken} = useContext(AppContext)
+  const { backendUrl, companyToken } = useContext(AppContext)
 
   // Function to fetch company job applications data
-  const fetchCompanyJobs = async()=>{
+  const fetchCompanyJobs = async () => {
     try {
-      const {data} = await axios.get(backendUrl + '/api/company/list-jobs',
-        {headers:{token:companyToken}}
+      const { data } = await axios.get(backendUrl + '/api/company/list-jobs',
+        { headers: { token: companyToken } }
       )
       if (data.success) {
         setJobs(data.jobsData.reverse())
         console.log(data.jobsData)
-      }else{
+      } else {
         toast.error(data.message)
       }
     } catch (error) {
@@ -34,13 +34,13 @@ const ManageJobs = () => {
   }
 
   //function to chnage job visibility
-  const changeJobvisibility = async(id)=>{
+  const changeJobvisibility = async (id) => {
     try {
-      const {data} = await axios.post(backendUrl + '/api/company/change-visibility',
-        {id},
-        {headers: {token:companyToken}}
+      const { data } = await axios.post(backendUrl + '/api/company/change-visibility',
+        { id },
+        { headers: { token: companyToken } }
       )
-      if(data.success){
+      if (data.success) {
         toast.success(data.message)
         fetchCompanyJobs()
       } else {
@@ -51,12 +51,15 @@ const ManageJobs = () => {
     }
   }
 
-  useEffect(()=>{
-if (companyToken) {
-  fetchCompanyJobs()
-}
-  },[companyToken])
-  return jobs ? jobs.length === 0 ? (<div></div>):(
+  useEffect(() => {
+    if (companyToken) {
+      fetchCompanyJobs()
+    }
+  }, [companyToken])
+  return jobs ? jobs.length === 0 ? (
+    <div className='flex items-center justify-center h-[70vh]'>
+      <p className='text-xl sm:text-2xl'>No Jobs Available or Posted</p>
+    </div>) : (
     <div className='container p-4 max-w-5xl'>
       <div className='overflow-x-auto'>
         <table className='min-w-full bg-white border border-gray-200 max-sm:text-sm'>
@@ -71,15 +74,15 @@ if (companyToken) {
             </tr>
           </thead>
           <tbody>
-            {jobs.map((job, index)=>(
+            {jobs.map((job, index) => (
               <tr key={index} className='text-gray-700'>
-                <td className='py-2 px-4 bordr-b max-sm:hidden'>{index+1}</td>
+                <td className='py-2 px-4 bordr-b max-sm:hidden'>{index + 1}</td>
                 <td className='py-2 px-4 bordr-b'>{job.title}</td>
                 <td className='py-2 px-4 bordr-b max-sm:hidden'>{moment(job.date).format('ll')}</td>
                 <td className='py-2 px-4 bordr-b max-sm:hidden'>{job.location}</td>
                 <td className='py-2 px-4 bordr-b text-center'>{job.applicants}</td>
                 <td className='py-2 px-4 bordr-b'>
-                  <input onChange={()=> changeJobvisibility(job._id)} className='scale-125 ml-4' type="checkbox" checked={job.visible}/>
+                  <input onChange={() => changeJobvisibility(job._id)} className='scale-125 ml-4' type="checkbox" checked={job.visible} />
                 </td>
               </tr>
             ))}
@@ -87,7 +90,7 @@ if (companyToken) {
         </table>
       </div>
       <div className='mt-4 flex justify-end'>
-        <button onClick={()=> navigate('/dashboard/add-job')} className='bg-black text-white rounded py-2 px-4'>Add new job</button>
+        <button onClick={() => navigate('/dashboard/add-job')} className='bg-black text-white rounded py-2 px-4'>Add new job</button>
       </div>
     </div>
   ) : <Loading />

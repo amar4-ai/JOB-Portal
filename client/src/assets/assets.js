@@ -83,12 +83,12 @@ export const JobCategories = [
 ]
 
 export const JobLocations = [
-    "Bangalore",
-    "Washington",
-    "Hyderabad",
-    "Mumbai",
+    "Kathmandu",
+    "Nepalgunj",
+    "Lodon",
+    "Pokhara",
     "California",
-    "Chennai",
+    "Butwol",
     "New York"
 ]
 

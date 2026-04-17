@@ -13,18 +13,18 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
 
     //Function to logout for company
-    const logout = ()=>{
+    const logout = () => {
         setCompanyToken(null)
         localStorage.removeItem('companyToken')
         setCompanyData(null)
         navigate('/')
     }
 
-    useEffect(()=>{
-        if(companyData){
+    useEffect(() => {
+        if (companyData) {
             navigate('/dashboard/manage-job')
         }
-    },[companyData])
+    }, [companyData])
 
     useEffect(() => {
         // simulate checking token
@@ -77,7 +77,7 @@ const Dashboard = () => {
                     </ul>
                 </div>
 
-                <div>
+                <div className='flex-1 h-full p-2 sm:p-5'>
                     <Outlet />
                 </div>
 

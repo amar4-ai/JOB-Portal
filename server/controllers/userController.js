@@ -68,50 +68,6 @@ export const applyForJob = async (req, res) => {
 };
 
 
-// export const applyForJob = async (req, res) => {
-//   try {
-//     const auth = getAuth(req);
-//     const userId = auth?.userId;
-
-
-//     if (!userId) {
-//       return res.json({ success: false, message: "Unauthorized - login required" });
-//     }
-
-//     const { jobId } = req.body;
-
-//     if (!jobId) {
-//       return res.json({ success: false, message: "JobId missing" });
-//     }
-
-//     const already = await JobApplication.findOne({ jobId, userId });
-
-//     if (already) {
-//       return res.json({ success: false, message: "Already applied" });
-//     }
-
-//     const job = await Job.findById(jobId);
-
-//     if (!job) {
-//       return res.json({ success: false, message: "Job not found" });
-//     }
-
-//     const newApp = await JobApplication.create({
-//       jobId,
-//       userId,
-//       companyId: job.companyId,
-//       date: new Date()
-//     });
-
-   
-
-//     res.json({ success: true, message: "Applied successfully" });
-
-//   } catch (err) {
-//     console.log(" APPLY ERROR:", err);
-//     res.json({ success: false, message: err.message });
-//   }
-// };
 
 //Get user applied applications
 export const getuserJobApplications = async (req, res) => {
