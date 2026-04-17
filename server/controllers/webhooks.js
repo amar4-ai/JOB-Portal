@@ -28,15 +28,17 @@ export const clerkWebhooks = async (req, res) => {
         switch (type) {
             case 'user.created': {
                 const userData = {
-                    _id: data.id,
-                
+                    // _id: data.id,
+                    clerkId: data.id, // store here
+
+
                     email: data.email_addresses[0].email_address,
                     name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'Anonymous',
                     image: data.image_url,
                     resume: ''
                 };
 
-                console.log("👉 Data to insert:", userData);
+                console.log("Data to insert:", userData);
                 await User.create(userData);
                 console.log("User created in DB");
                 break;
@@ -49,13 +51,16 @@ export const clerkWebhooks = async (req, res) => {
                     image: data.image_url,
                 };
 
-                await User.findByIdAndUpdate(data.id, userData);
+                // await User.findByIdAndUpdate(data.id, userData);
+                await User.findOneAndUpdate({ clerkId: data.id }, userData);
                 console.log("User updated in DB");
                 break;
             }
 
             case 'user.deleted': {
-                await User.findByIdAndDelete(data.id);
+                // await User.findByIdAndDelete(data.id);
+
+                await User.findOneAndDelete({ clerkId: data.id });
                 console.log("User deleted from DB");
                 break;
             }
