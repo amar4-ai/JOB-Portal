@@ -7,22 +7,20 @@ import { AppContextProvider } from './context/AppContext.jsx'
 import {ClerkProvider} from '@clerk/react'
 
 
-// Get publishable key
+//Import publish key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
-if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Publishable Key")
+if(!PUBLISHABLE_KEY){
+  throw new Error("Missing Publishable key")
 }
 
 createRoot(document.getElementById('root')).render(
-  <ClerkProvider
-    publishableKey={PUBLISHABLE_KEY}
-    afterSignOutUrl="/"
-  >
-    <BrowserRouter>
-      <AppContextProvider>
-        <App />
-      </AppContextProvider>
-    </BrowserRouter>
-  </ClerkProvider>
+  <ClerkProvider publishableKey={PUBLISHABLE_KEY}afterSignOutUrl="/" >  
+  <BrowserRouter>
+  <AppContextProvider>
+    <App />
+  </AppContextProvider>
+  </BrowserRouter>
+
+  </ClerkProvider>,
 )
